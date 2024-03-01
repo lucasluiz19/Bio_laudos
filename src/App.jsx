@@ -1,63 +1,64 @@
-import { useState } from "react"
-import { Specification } from "./components/productSpecifications"
-
+import { useState } from "react";
+import { DATA } from "./constanst";
 
 export function App() {
-  const [nameSearch, setNameSearch]= useState('')
-  
-  const nameProducts = [
-    {
-      name:"activemos",
-      ph:'5,5 a 5,7',
-      proteina:'10 a 15'
-    },
-    {
-      name:"gaya",
-      ph:"5 a 7",
-      proteina:"50 a 60"
-    }
+  const [productSelected, setProductSelected] = useState(null);
 
-  ]
+  const handleSelectProduct = (productId) => {
+    const [product] = DATA.filter((item) => item.id === Number(productId));
 
-  function handleNameProduct(event){
-    const nameProduct = event.target.value
-    setNameSearch(nameProduct)
-  }
-
-  function handleSearchProduct(event){
-    event.preventDefault()
-
-    const productfound = nameProducts.find((nameFind)=>{
-        return nameFind.name.toLocaleLowerCase() == nameSearch.toLocaleLowerCase()
-    })
-      if(nameSearch == '' ){
-        alert('Por favor digite um Produto !')
-        
-      }else if(productfound){
-        console.log(productfound)
-        
-
-      }else{
-        alert('produto não encontrado')
-      }
-      
-  }
-   
-  
+    setProductSelected(product);
+  };
 
   return (
     <div className="px-5  w-screen h-screen flex flex-col items-center  justify-center">
       <div className=" flex flex-col rounded-md bg-slate-50 text-black  px-2 text-center gap-4 border w-10/12 md:max-w-3xl ">
-        <span className="flex justify-center" ><a href=""><img className="w-32 md:w-36 lg:w-48 " src="https://www.biorigin.net/wp-content/uploads/2023/01/logotipobiorigin.webp" alt="" /></a></span>
-        <h1 className="text-xl font-sans">Digite abaixo o nome do semi acabado</h1>
+        <span className="flex justify-center">
+          <img
+            className="w-32 md:w-36 lg:w-48 "
+            src="https://www.biorigin.net/wp-content/uploads/2023/01/logotipobiorigin.webp"
+            alt=""
+          />
+        </span>
+        <h1 className="text-xl font-sans">
+          Digite abaixo o nome do semi acabado
+        </h1>
 
-        <form  className="flex flex-col items-center gap-3 ">
-          <input onChange={handleNameProduct} type="text" className="bg-transparent text-lg focus:border focus:rounded-md  focus:outline-lime-400 text-center p-4"placeholder="Digite aqui!"  />
-          <button onClick={handleSearchProduct} className="bg-lime-400 hover:bg-lime-500  w-32 h-9 rounded-md mb-8 "> Buscar </button>
-        </form>
-      </div>  
+        <select
+          name="select-option"
+          onChange={(e) => handleSelectProduct(e.target.value)}
+        >
+          <option value="" hidden >
+            Selecione uma opção
+          </option>
+          {DATA.map((item) => (
+            <option key={item.id} value={item.id}>
+              {item.name}
+            </option>
+          ))}
+        </select>
+
+        {!!productSelected && (
+          <div>
+            <p>Resultado</p>
+
+            <div>
+              <strong>Nome: </strong>
+              <span>{productSelected.name}</span>
+            </div>
+
+            <div>
+              <strong>ph: </strong>
+              <span>{productSelected.ph}</span>
+            </div>
+
+            <div>
+              <strong>proteina: </strong>
+              <span>{productSelected.proteina}</span>
+            </div>
+          </div>
+        )}
+      </div>
     </div>
-  )
+  );
 }
-
-
